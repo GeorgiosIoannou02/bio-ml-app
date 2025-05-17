@@ -46,6 +46,3 @@ bio-ml-app/
 - Γιώργος Ιωάννου – ML, Streamlit
 - [Όνομα 2] – Docker, Οπτικοποιήσεις
 
-## 🔗 GitHub Repo
-
-[https://github.com/your-repo](https://github.com/your-repo)
