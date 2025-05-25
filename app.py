@@ -9,7 +9,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
 
 st.set_page_config(page_title="BioML App", layout="wide")
-
 st.title("🧬 BioML - Ανάλυση Μοριακών Βιολογικών Δεδομένων")
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["📂 Δεδομένα", "📊 PCA", "🧩 Clustering", "🤖 Classification", "👥 Ομάδα"])
@@ -29,9 +28,10 @@ with tab1:
     uploaded_file = st.file_uploader("Ανέβασε αρχείο CSV", type=["csv"])
     if uploaded_file:
         df = pd.read_csv(uploaded_file)
+        df = df.apply(pd.to_numeric, errors='ignore')
         st.write("Προεπισκόπηση:")
         st.dataframe(df)
-        st.write("Στήλες του dataset:", df.columns.tolist())
+        st.write("Τύποι στηλών:", df.dtypes)
         st.session_state.df = df
 
 with tab2:
@@ -58,6 +58,7 @@ with tab3:
         df = st.session_state.df
         scaled = preprocess_data(df)
         if scaled is None:
+            st.error("Δεν υπάρχουν αριθμητικά δεδομένα για clustering.")
             st.stop()
         n_clusters = st.slider("Αριθμός Clusters", 2, 10, 3)
         kmeans = KMeans(n_clusters=n_clusters)
@@ -83,6 +84,7 @@ with tab4:
         label_col = st.selectbox("Επέλεξε στήλη-στόχο (label):", df.columns)
         try:
             X = df.drop(columns=[label_col])
+            st.write("Στήλες εισόδου μετά την αφαίρεση του label:", X.columns.tolist())
             X = X.select_dtypes(include='number')
             y = df[label_col]
             if X.empty:
@@ -104,9 +106,10 @@ with tab4:
 with tab5:
     st.header("Στοιχεία Ομάδας")
     st.markdown("""
-    **Ονοματεπώνυμα:**  
-    - Γιώργος Ιωάννου (Pipeline, ML, Streamlit)  
-    - [Όνομα 2] (Οπτικοποιήσεις, Docker, UML)
+**Ονοματεπώνυμα:**  
+- Γιώργος Ιωάννου (inf2021006)  
+- Γιώργος Χρυσοστόμου (inf2021004)  
+- Αλέξανδρος Χριστοφόρου (inf2021007)
 
-    **GitHub:** [https://github.com/your-repo](https://github.com/your-repo)
-    """)
+**GitHub:** [https://github.com/GeorgiosIoannou02/bio-ml-app](https://github.com/GeorgiosIoannou02/bio-ml-app)
+""")
